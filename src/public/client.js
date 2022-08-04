@@ -49,9 +49,9 @@ function renderMessages(messagesArray) {
     try {
         const html = messagesArray.map(messageInfo => {
             return(`<div>
-                <strong style="color: blue;" >${messageInfo.mail}</strong>[
-                <span style="color: brown;">${fecha}, ${argHora}</span>]:
-                <em style="color: green;font-style: italic;">${messageInfo.message}</em> </div>`)
+                <strong style="color: blue;" >${messageInfo.author.mail}</strong>[
+                <span style="color: brown;">${messageInfo.comment.time}</span>]:
+                <em style="color: green;font-style: italic;">${messageInfo.comment.text}</em> </div>`)
         }).join(" ");
 
         totalMessages.innerHTML = html

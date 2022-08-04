@@ -59,21 +59,28 @@ io.on('connection', async socket=>{
         io.emit('serverSend:Products', productos)//emito productos recibidos a los usuarios
     })
     // PARTE CHAT _ LADO SERVIDOR
-    const authorSchema = new schema.Entity('authors')
-    const commentSchema = new schema.Entity('comments')
+    const authorSchema = new schema.Entity('authors',{},{idAttribute:'mail'})
+    const commentSchema = new schema.Entity(
+        'comments',
+        {author: authorSchema},
+        { idAttribute: "id" })
     
-    const chatSchema = new schema.Entity('chats', { 
-        authors: [authorSchema],
-        comments: [commentSchema]    
-    });
-    const normalizedChat = normalize(messagesNormalizar, chatSchema); 
+    const chatSchema = new schema.Entity(
+        'chats', 
+        { comments: [commentSchema]},
+        { idAttribute: "id" }
+    );
+    let normalizedChat = normalize({id:"chat1",comments: messagesNormalizar}, chatSchema); 
     print(normalizedChat)
     // print('capacidad normalizedChat',JSON.stringify(normalizedChat).length) 
     io.emit('serverSend:message', normalizedChat) //envio CHATS a todos los usuarios
     //archivo a Normalizar - recibido desde el Front
     socket.on('client:messageNormalizar', messageInfo=>{
+        messageInfo.id=(messagesNormalizar.length)+1
         messagesNormalizar.push(messageInfo) //RECIBO mensaje y lo anido
         escribir()
+        normalizedChat = normalize({id:"chat1",comments: messagesNormalizar}, chatSchema); 
+        print(normalizedChat)
         io.emit('serverSend:message', normalizedChat)
     })
     // socket.on('client:message', messageInfo=>{
@@ -82,5 +89,3 @@ io.on('connection', async socket=>{
     // })
 })
 
-let chat=[{id:1},...messagesNormalizar]
-console.log('chat',chat)

@@ -49,13 +49,13 @@
     <div class="container">
     <h3 style="margin:2rem 0;"> Contáctenos:</h3>
     <form id="formChat" style="margin-top: 2rem;">
-        Id: <input id="idUsuario" type="email" name="Id" class="input-group mb-3" placeholder="Ingrese su mail" required>
-        nombre: <input id="nameInput" type="text" name="name" class="input-group mb-3" placeholder="nombre del usuario" required>
-        apellido: <input id="surnameInput" type="text" name="surname" class="input-group mb-3" placeholder="apellido del usuario" required>
-        edad: <input id="ageInput" type="number" name="age" class="input-group mb-3" placeholder="edad del usuario" required>
-        alias: <input id="aliasInput" type="text" name="alias" class="input-group mb-3" placeholder="alias del usuario" required>
-        avatar: <input id="avatarInput" type="url" name="avatar" class="input-group mb-3" placeholder="url avatar (foto, logo) del usuario" required>
-        text: <input id="messageInput" type="text" name="message" class="input-group mb-3" placeholder="mensaje del usuario" required>
+        Id: <input id="idUsuario" type="email" name="Id" class="input-group mb-3" placeholder="Ingrese su mail" value="PP@gmail.com" required>
+        nombre: <input id="nameInput" type="text" name="name" class="input-group mb-3" placeholder="nombre del usuario" value="Pepe" required>
+        apellido: <input id="surnameInput" type="text" name="surname" class="input-group mb-3" placeholder="apellido del usuario" value="perz" required>
+        edad: <input id="ageInput" type="number" name="age" class="input-group mb-3" placeholder="edad del usuario" value="34" required>
+        alias: <input id="aliasInput" type="text" name="alias" class="input-group mb-3" placeholder="alias del usuario" value="pp" required>
+        avatar: <input id="avatarInput" type="url" name="avatar" class="input-group mb-3" placeholder="url avatar (foto, logo) del usuario" value="https://buenavibra.es/wp-content/uploads/2017/08/francella-2.jpg" required>
+        text: <input id="messageInput" type="text" name="message" class="input-group mb-3" placeholder="mensaje del usuario" value="Hola!!" required>
         
         <input type="submit" value="Enviar"  class="btn btn-primary" style="margin:2rem 0;">
     </form>
@@ -73,14 +73,28 @@
     <script type="text/javascript">
         $(document).ready(renderProducts())
         $(document).ready(()=>{
-            const commentSchema = new normalizr.schema.Entity('comments')
-            const authorSchema = new normalizr.schema.Entity('authors')
-            const chatSchema = new normalizr.schema.Entity('chats', {
-                authors: [authorSchema],
-                comments: [commentSchema]    
-            });
+            const authorSchema = new normalizr.schema.Entity('authors',{},{idAttribute:'mail'})
+            const commentSchema = new normalizr.schema.Entity(
+                'comments',
+                {author: authorSchema},
+                { idAttribute: "id" }
+            )
+    
+            const chatSchema = new normalizr.schema.Entity(
+            'chats', 
+            { comments: [commentSchema]},
+            { idAttribute: "id" }
+            );
+            
             socket.on('serverSend:message', normalizedChat=>{
-            const denormalizedChat = normalizr.denormalize(normalizedChat.result, chatSchema, normalizedChat.entities);
+                console.log("serverSend:message -> normalizedChat")
+                console.log(normalizedChat)
+                console.log(typeof normalizedChat)
+                const denormalizedChat = normalizr.denormalize(normalizedChat.result, chatSchema, normalizedChat.entities);
+                console.log("denormalizedChat")
+                console.log(denormalizedChat)
+                console.log(typeof denormalizedChat)
+                renderMessages(denormalizedChat.comments)
             // print(denormalizedChat)
             // console.log('capacidad',JSON.stringify(denormalizedChat).length)
             });
