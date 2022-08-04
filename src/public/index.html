@@ -11,6 +11,7 @@
 <body>
     <h1 style="margin-left:2rem;">Bienvenido</h1>
     <div class="container">
+        <div id="percentil"></div>
     <h3 style="margin:2rem 0;"> Ingrese un Producto:</h3>
 
     <form id="formProducts" action="/"  method="POST">
@@ -95,6 +96,11 @@
                 console.log(denormalizedChat)
                 console.log(typeof denormalizedChat)
                 renderMessages(denormalizedChat.comments)
+                console.log(JSON.stringify(normalizedChat).length)
+                console.log(JSON.stringify(denormalizedChat).length)
+                const percentil =((JSON.stringify(normalizedChat).length)/(JSON.stringify(denormalizedChat).length))*100
+                const percentilDiv = document.querySelector('#percentil')
+                percentilDiv.innerHTML =percentil
             // print(denormalizedChat)
             // console.log('capacidad',JSON.stringify(denormalizedChat).length)
             });

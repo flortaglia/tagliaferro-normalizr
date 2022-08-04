@@ -45,6 +45,7 @@ function sendMessage() {
 }
 
 //RENDER MENSAJES E INSERTO HTML
+
 function renderMessages(messagesArray) {
     try {
         const html = messagesArray.map(messageInfo => {
