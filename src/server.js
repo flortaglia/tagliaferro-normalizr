@@ -82,13 +82,15 @@ app.get('/user-info',(req, res)=>{
 })
 
 app.get('/logout',authMiddleware,(req, res)=>{
-  res.send(`<h1>Hasta luego ${req.session.user}</h1>
-  <script type="text/javascript">
-  setTimeout(function(){ location.href = '/login'},2000)
-  </script>`)
+  let user= req.session.user
   req.session.destroy(err=>{
     if(err){
       console.log('error en el Logout:', err)
+    }else{
+      res.send(`<h1>Hasta luego ${user}</h1>
+      <script type="text/javascript">
+      setTimeout(function(){ location.href = '/login'},2000)
+      </script>`)
     }
   })
 })
