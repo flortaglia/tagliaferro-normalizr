@@ -46,7 +46,7 @@ app.use(
   session({
     store: MongoStore.create({
       mongoUrl:
-        // "mongodb+srv://FlorTaglia:FlorTaglia123@cluster0.6ovf2.mongodb.net/user?retryWrites=true&w=majority",
+        
         `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_CLUSTER}.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`,
         
         //No FUNCIONA CON .ENV
