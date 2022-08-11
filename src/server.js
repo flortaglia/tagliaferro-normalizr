@@ -1,9 +1,104 @@
 import fs from 'fs'
+import 'dotenv/config'
 import express from 'express'
+import routes from "./routes/index.js";
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import MongoStore from "connect-mongo";
+
+const DB_USER=process.env.DB_USER
+const DB_PASSWORD=process.env.DB_PASSWORD
+const DB_NAME=process.env.DB_NAME
+const DB_CLUSTER=process.env.DB_CLUSTER
+console.log("DB_PASSWORD",DB_PASSWORD)
 const app = express()
 const puerto =8080
-import routes from "./routes/index.js";
+const mongoOptions = { useNewUrlParser: true, useUnifiedTopology: true };
+
 app.use("/", routes);
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+// app.use(bodyParser.json());
+
+function authMiddleware(req, res, next) {
+    console.log("authMiddleware",req.session.user)
+  if (req.session.user) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+}
+
+function loginMiddleware(req, res, next) {
+  if (req.session.user) {
+    res.redirect("/");
+  } else {
+    next();
+  }
+}
+
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl:
+        `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_CLUSTER}.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`,
+        // "mongodb+srv://FlorTaglia:FlorTaglia123@cluster0.6ovf2.mongodb.net/user?retryWrites=true&w=majority",
+        //CAMBIARRRRRRRRRR!!!!!xxxxxxxxx
+      mongoOptions,
+      ttl:600, //time to live sec session CHANGE TO =>10MIN 10*60
+      autoRemove: 'native' //session expires the doc in mongodb will be removed
+    }),
+    secret: "clase24-coderback",
+    resave: false,
+    saveUninitialized: false,
+    rolling: true, // Re initialization of the time in every request
+    cookie: {
+      maxAge: 60000, //CHANGE TO 1 MIN=> 1*1000*60
+    },
+  })
+);
+app.get('/',authMiddleware,(req,res)=>{
+  res.sendFile(path.join(__dirname, "./public/index.html"));
+
+})
+app.get('/login',loginMiddleware,(req, res)=>{
+  res.sendFile(path.join(__dirname, "./public","login.html"));
+  
+})
+app.post('/process-login',(req, res)=>{
+    console.log('req',req.body)
+    req.session.user=req.body.username
+    // res.status(200).send(req.session.user)
+    res.redirect('/')
+})
+app.get('/user-info',(req, res)=>{
+  res.json({username: req.session.user})
+})
+
+app.get('/logout',authMiddleware,(req, res)=>{
+  res.send(`<h1>Hasta luego ${req.session.user}</h1>
+  <script type="text/javascript">
+  setTimeout(function(){ location.href = '/login'},2000)
+  </script>`)
+  req.session.destroy(err=>{
+    if(err){
+      console.log('error en el Logout:', err)
+    }
+  })
+})
+// const handlebars = require('express-handlebars')
+
+
+// app.engine('hbs', handlebars({
+//   extname: '.hbs',
+//   defaultLayout: path.join(__dirname, './views/layouts/main.hbs'),
+//   layoutsDir: path.join(__dirname, './views/layouts'),
+//   partialsDir: path.join(__dirname, './views/partials')
+// }))
+
+// app.set('view engine', 'hbs')
+// app.set('views', path.join(__dirname, './views'))
 
 import path from 'path'
 import { fileURLToPath } from 'url';
@@ -11,6 +106,8 @@ import { fileURLToPath } from 'url';
 const __filename= fileURLToPath(import.meta.url)
 const __dirname= path.dirname(__filename)
 // import { Server: IOServer } from ('socket.io')
+
+
 
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -29,9 +126,9 @@ const expressServer = app.listen(puerto, (err) => {
 })
 const io = new Server(expressServer) 
 
-function print(objeto) {
-    console.log(util.inspect(objeto, false, 12, true));
-}
+// function print(objeto) {
+//     console.log(util.inspect(objeto, false, 12, true));
+// }
 
 const messagesNormalizar= []
 const productos= []
@@ -49,6 +146,9 @@ async function escribir(){
 
 }
 // LADO SERVIDOR
+
+
+
 io.on('connection', async socket=>{
     console.log('se conecto un usuario')
 
@@ -71,7 +171,7 @@ io.on('connection', async socket=>{
         { idAttribute: "id" }
     );
     let normalizedChat = normalize({id:"chat1",comments: messagesNormalizar}, chatSchema); 
-    print(normalizedChat)
+    
     // print('capacidad normalizedChat',JSON.stringify(normalizedChat).length) 
     io.emit('serverSend:message', normalizedChat) //envio CHATS a todos los usuarios
     //archivo a Normalizar - recibido desde el Front
@@ -80,7 +180,7 @@ io.on('connection', async socket=>{
         messagesNormalizar.push(messageInfo) //RECIBO mensaje y lo anido
         escribir()
         normalizedChat = normalize({id:"chat1",comments: messagesNormalizar}, chatSchema); 
-        print(normalizedChat)
+      
         io.emit('serverSend:message', normalizedChat)
     })
     // socket.on('client:message', messageInfo=>{

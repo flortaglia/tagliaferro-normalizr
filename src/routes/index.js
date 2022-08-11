@@ -1,7 +1,10 @@
 import { Router } from 'express';
 const router= Router();
+
+
 import {faker}  from "@faker-js/faker";
 faker.locale='es'
+
 
 router.get ('/api/productos-test', (req,res)=>{
     
@@ -14,7 +17,7 @@ router.get ('/api/productos-test', (req,res)=>{
         thumbnail: faker.image.imageUrl(),
       });
     }
-    console.log(response)
+    // console.log(response)
     res.json(response);
 })
 

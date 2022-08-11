@@ -1,5 +1,4 @@
 
-
 // Lado cliente
 const socket = io() 
 //Fecha
@@ -13,6 +12,7 @@ const argHora=tiempo.toLocaleTimeString('it-IT')
 // const hora= hoy.getHours()
 // const horafinal= hora.toString().padStart(2,"0")
 
+
 //CHAT 
 const formChat = document.querySelector('#formChat')
 const id = document.querySelector('#idUsuario')
@@ -25,6 +25,26 @@ const messageInput = document.querySelector('#messageInput')
 
 
 const totalMessages = document.querySelector('#totalMessages')
+//Bienvenida MENSAJE LOGIN
+async function insertUser(){
+    let userName
+    fetch('/user-info')
+     .then(user=>user.json())
+     .then(json=>userName= json)
+
+    console.log('userName', userName)
+    // console.log(res.body)
+    // const data= await res.json()
+    // document.querySelector('#Login').innerHTML= data.username
+    // console.log('userName', response.json)
+    const response = await fetch('/logIn.hbs')
+    const logInPlantilla= await response.text()
+    const template = Handlebars.compile(logInPlantilla)
+    const filled = template(userName) 
+    document.querySelector('#Login').innerHTML= filled 
+
+}
+ insertUser()
 // EMITO MENSAJES AL SERVIDOR
 function sendMessage() {
     try {
@@ -69,13 +89,6 @@ formChat.addEventListener('submit', event => {
 
 // CAPTURO MENSAJES EMITIDOS AL SERVIDOR
 
-
-
-
-
-
-
-
 // 2  PARTE PRODUCTOS
 const formProducts = document.querySelector('#formProducts')
 const titleInput = document.querySelector('#title')
@@ -107,7 +120,7 @@ async function renderProducts() {
          .then((product)=>product.json())
          .then((json)=> productsArray = json )
       
-        console.log('productsArray',productsArray)
+        // console.log('productsArray',productsArray)
         const response = await fetch('/plantilla.hbs') //traemos la plantilla
         
         
