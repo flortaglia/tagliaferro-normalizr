@@ -6,11 +6,16 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import MongoStore from "connect-mongo";
 
+// console.log("pwd:", process.cwd())
+// const envFile = path.join(process.cwd(), './src/.env')
+// dotenv.config({ path: envFile });
+
+
 const DB_USER=process.env.DB_USER
 const DB_PASSWORD=process.env.DB_PASSWORD
 const DB_NAME=process.env.DB_NAME
 const DB_CLUSTER=process.env.DB_CLUSTER
-console.log("DB_PASSWORD",DB_PASSWORD)
+
 const app = express()
 const puerto =8080
 const mongoOptions = { useNewUrlParser: true, useUnifiedTopology: true };
@@ -19,7 +24,6 @@ app.use("/", routes);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
-// app.use(bodyParser.json());
 
 function authMiddleware(req, res, next) {
     console.log("authMiddleware",req.session.user)
@@ -42,9 +46,10 @@ app.use(
   session({
     store: MongoStore.create({
       mongoUrl:
-        `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_CLUSTER}.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`,
         // "mongodb+srv://FlorTaglia:FlorTaglia123@cluster0.6ovf2.mongodb.net/user?retryWrites=true&w=majority",
-        //CAMBIARRRRRRRRRR!!!!!xxxxxxxxx
+        `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_CLUSTER}.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`,
+        
+        //No FUNCIONA CON .ENV
       mongoOptions,
       ttl:600, //time to live sec session CHANGE TO =>10MIN 10*60
       autoRemove: 'native' //session expires the doc in mongodb will be removed
