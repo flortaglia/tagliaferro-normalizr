@@ -3,7 +3,7 @@ const router= Router();
 const path = require( 'path') 
 const {faker}  =require( "@faker-js/faker");
 faker.locale='es'
-//// de server path???
+
 module.export = router.get ('/api/productos-test', (req,res)=>{
     
     const response = [];
@@ -40,6 +40,11 @@ module.exports = function(passport){
     }
     
   })
+
+  router.get('/user-info',(req, res)=>{
+    res.json({username: req.user.username})
+  })
+
   //POST LOGIN
   router.post('/login',passport.authenticate('login',
     {failureRedirect: '/fail-login',failureMessage: true}),
