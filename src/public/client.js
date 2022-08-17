@@ -26,6 +26,7 @@ const messageInput = document.querySelector('#messageInput')
 
 const totalMessages = document.querySelector('#totalMessages')
 //Bienvenida MENSAJE LOGIN
+
 async function insertUser(){
     let userName
     fetch('/user-info')

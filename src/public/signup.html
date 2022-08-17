@@ -8,20 +8,22 @@
     <title>LogIn</title>
 </head>
 <body>
-    <h1 style="margin-left:2rem;">Bienvenido - Login de Usuario</h1>
+    <h1 style="margin-left:2rem;">Bienvenido - REGISTRATE!!!!</h1>
     <div class="container">
        
         <h3 style="margin:2rem 0;"> Ingrese sus datos:</h3>
 
-        <form id="formLogIn" action="/login"  method="post">
-            mail: <input id="mailInput" type="mail" name="username" class="input-group mb-3" placeholder="mail del usuario" value="Pepe@mail.com" required>
-            pasword: <input id="passwordInput" type="text" name="password" class="input-group mb-3" placeholder="password del usuario" value="perz" required>   
+        <form id="formLogIn" action="/signup"  method="post">
             
-            <input id="LogInBtn" class="btn btn-success my-3" type="submit" value="Login">
+            mail: <input id="usernameInput" type="mail" name="username" class="input-group mb-3" placeholder="mail del usuario" value="Pepe@mail.com" required>
+            pasword: <input id="passwordInput" type="text" name="password" class="input-group mb-3" placeholder="password del usuario" value="perz" required>   
+            <div class="form-group">
+                <input id="SignupBtn" class="btn btn-success my-3" type="submit" value="Registrarse">
+            </div>
             
         </form>
-        <div class="text-center">
-            <button id="SignupBtn" class="btn btn-success m-3" onclick="goSignup()">Registrarme</button>
+        <div class="text-center"></div>
+            <button id="LogInBtn" class="btn btn-success my-3" onclick="goLogin()">Ir a Login</button>
         </div>
     </div>
     <script>
@@ -29,8 +31,8 @@
           location.href = pagina;
         }
     
-        function goSignup() {
-          redireccionar('/signup');
+        function goLogin() {
+          redireccionar('/login');
         }
       </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
