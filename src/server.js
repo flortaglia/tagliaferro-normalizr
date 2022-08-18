@@ -56,78 +56,6 @@ initPassport(passport);
 app.use("/", routes);
 
 
-// passport.use("register", signupStrategy);
-// passport.use("login", loginStrategy);
-
-
-///CON SESSION 
-// function authMiddleware(req, res, next) {
-//   console.log("authMiddleware",req.session.user)
-// if (req.session.user) {
-//   next();
-// } else {
-//   res.redirect("/login");
-// }
-// }
-
-// function loginMiddleware(req, res, next) {
-// if (req.session.user) {
-//   res.redirect("/");
-// } else {
-//   next();
-// }
-// }
-
-// app.get('/',authMiddleware,(req,res)=>{
-//   res.sendFile(path.join(__dirname, "./public/index.html"));
-
-// })
-// app.get('/login',loginMiddleware,(req, res)=>{
-//   res.sendFile(path.join(__dirname, "./public","login.html"));
-  
-// })
-// app.post('/process-login',(req, res)=>{
-//     console.log('req',req.body)
-//     req.session.user=req.body.username
-//     // res.status(200).send(req.session.user)
-//     res.redirect('/')
-// })
-// app.get('/user-info',(req, res)=>{
-//   res.json({username: req.session.user})
-// })
-
-// app.get('/logout',authMiddleware,(req, res)=>{
-//   let user= req.session.user
-//   req.session.destroy(err=>{
-//     if(err){
-//       console.log('error en el Logout:', err)
-//     }else{
-//       res.send(`<h1>Hasta luego ${user}</h1>
-//       <script type="text/javascript">
-//       setTimeout(function(){ location.href = '/login'},2000)
-//       </script>`)
-//     }
-//   })
-// })
-
-
-
-//MoTOR HANDLEBARS BACKEND
-// const handlebars = require('express-handlebars')
-
-
-// app.engine('hbs', handlebars({
-//   extname: '.hbs',
-//   defaultLayout: path.join(__dirname, './views/layouts/main.hbs'),
-//   layoutsDir: path.join(__dirname, './views/layouts'),
-//   partialsDir: path.join(__dirname, './views/partials')
-// }))
-
-// app.set('view engine', 'hbs')
-// app.set('views', path.join(__dirname, './views'))
-
-// const { Server: IOServer } = require( ('socket.io')
-
 const httpServer = createServer();
 
 const expressServer = app.listen(puerto, (err) => {
@@ -138,10 +66,6 @@ const expressServer = app.listen(puerto, (err) => {
     }
 })
 const io = new Server(expressServer) 
-
-// function print(objeto) {
-//     console.log(util.inspect(objeto, false, 12, true));
-// }
 
 const messagesNormalizar= []
 const productos= []

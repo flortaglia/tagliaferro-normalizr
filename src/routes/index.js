@@ -31,11 +31,11 @@ module.exports = function(passport){
   //GET LOGIN
   router.get('/login',(req, res)=>{
     if(req.isAuthenticated()){
-      console.log('estoy logueadooooo')
+      // console.log('estoy logueadooooo')
       let user= req.user
       res.redirect('/')
     }else{
-      console.log('usuario no logueado')
+      // console.log('usuario no logueado')
       res.sendFile(path.join(__dirname, ".././public/login.html")); //aca si podría un res.render
     }
     
@@ -49,14 +49,14 @@ module.exports = function(passport){
   router.post('/login',passport.authenticate('login',
     {failureRedirect: '/fail-login',failureMessage: true}),
     (req, res)=>{
-      console.log('req- metodo post-login',req.body)
+      // console.log('req- metodo post-login',req.body)
       let user= req.username
       res.redirect('/')
     }
   )
   //GET FAIL LOGIN
   router.get('/fail-login',(req, res)=>{
-    console.log('req.session.messages',req.session.messages)
+    // console.log('req.session.messages',req.session.messages)
     res.sendFile(path.join(__dirname, ".././public/faillogin.html"));
   })
 
@@ -69,7 +69,7 @@ module.exports = function(passport){
   router.post('/signup',passport.authenticate('signup',
     { failureRedirect: '/fail-signup',failureMessage: true}),
     (req, res)=>{
-      console.log('req- metodo post-login',req.body)
+      // console.log('req- metodo post-login',req.body)
       let user= req.user
       res.redirect('/')
     }
@@ -82,7 +82,7 @@ module.exports = function(passport){
   //LOGOUT
   router.get('/logout',  function(req, res, next) {
     let user= req.user.username
-    console.log('req.user',req.user)
+    // console.log('req.user',req.user)
     req.logout(function(err) {   //METODO DE PASSPORT
       if (err)  return next(err); 
       res.send(`<h1>Hasta luego ${user}</h1>
